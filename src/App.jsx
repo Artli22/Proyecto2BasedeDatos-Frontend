@@ -1,5 +1,8 @@
 import { createBrowserRouter, RouterProvider, Navigate } from "react-router-dom"
 import Formato from "./formatoApp"
+import Clientes from "./paginas/gestion/clientes"
+import Productos from "./paginas/gestion/productos"
+import Compras from "./paginas/gestion/compras"
 
 const router = createBrowserRouter([
   {
@@ -8,14 +11,14 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <Navigate to="/gestion/clientes" replace /> },
 
-      { path: "gestion/clientes",  element: <div>Página Clientes</div>  },
-      { path: "gestion/productos", element: <div>Página Productos</div> },
-      { path: "gestion/compras",   element: <div>Página Compras</div>   },
+      { path: "gestion/clientes",  element: <Clientes />  },
+      { path: "gestion/productos", element: <Productos />  },
+      { path: "gestion/compras",   element: <Compras />   },
 
       { path: "catalogo/empleados",      element: <div>Página Empleados</div>       },
       { path: "catalogo/categorias",     element: <div>Página Categorías</div>      },
       { path: "catalogo/proveedores",    element: <div>Página Proveedores</div>     },
-      { path: "catalogo/detalle-compra", element: <div>Página Detalle Compra</div>  },
+      { path: "catalogo/detalleCompra", element: <div>Página Detalle Compra</div>  },
 
       { path: "reportes/auditoria",    element: <div>Página Auditoría</div>              },
       { path: "reportes/rentabilidad", element: <div>Página Rentabilidad</div>           },
