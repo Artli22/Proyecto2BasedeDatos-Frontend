@@ -6,6 +6,7 @@ export default function Clientes() {
   const [cargando, setCargando] = useState(true)
   const [error, setError] = useState(null)
   const [editando, setEditando] = useState(null)
+  const [creando, setCreando] = useState(false)
   const [formData, setFormData] = useState({ nombre: "", telefono: "", correo: "", activo: true })
 
   useEffect(() => {
@@ -25,6 +26,7 @@ export default function Clientes() {
   }
 
   const handleEditar = (cliente) => {
+    setCreando(false)
     setEditando(cliente.id_cliente)
     setFormData({
       nombre: cliente.nombre,
@@ -34,8 +36,15 @@ export default function Clientes() {
     })
   }
 
+  const handleCrear = () => {
+    setCreando(true)
+    setEditando(null)
+    setFormData({ nombre: "", telefono: "", correo: "", activo: true })
+  }
+
   const handleCancelar = () => {
     setEditando(null)
+    setCreando(false)
     setFormData({ nombre: "", telefono: "", correo: "", activo: true })
   }
 
@@ -45,12 +54,17 @@ export default function Clientes() {
       return
     }
     try {
-      await clientesServicio.actualizar(editando, formData)
-      setClientes(
-        clientes.map((c) =>
-          c.id_cliente === editando ? { ...c, ...formData } : c
+      if (creando) {
+        const response = await clientesServicio.crear(formData)
+        setClientes([...clientes, response.data])
+      } else {
+        await clientesServicio.actualizar(editando, formData)
+        setClientes(
+          clientes.map((c) =>
+            c.id_cliente === editando ? { ...c, ...formData } : c
+          )
         )
-      )
+      }
       handleCancelar()
     } catch (err) {
       setError(err.message)
@@ -82,6 +96,21 @@ export default function Clientes() {
   return (
     <div style={{ padding: "20px" }}>
       <h1>Clientes</h1>
+      <button
+        onClick={handleCrear}
+        style={{
+          backgroundColor: "#10b981",
+          color: "white",
+          border: "none",
+          padding: "10px 20px",
+          borderRadius: "4px",
+          cursor: "pointer",
+          marginBottom: "20px",
+          fontWeight: "bold",
+        }}
+      >
+        + Crear Nuevo Cliente
+      </button>
       <table style={{ width: "100%", borderCollapse: "collapse" }}>
         <thead>
           <tr style={{ borderBottom: "2px solid #ddd", backgroundColor: "#f8f8f8" }}>
@@ -146,7 +175,7 @@ export default function Clientes() {
         </tbody>
       </table>
 
-      {editando && (
+      {(editando || creando) && (
         <div
           style={{
             position: "fixed",
@@ -171,7 +200,7 @@ export default function Clientes() {
               width: "90%",
             }}
           >
-            <h2>Editar Cliente</h2>
+            <h2>{creando ? "Crear Cliente" : "Editar Cliente"}</h2>
             <div style={{ marginBottom: "15px" }}>
               <label style={{ display: "block", marginBottom: "5px", fontWeight: "bold" }}>
                 Nombre

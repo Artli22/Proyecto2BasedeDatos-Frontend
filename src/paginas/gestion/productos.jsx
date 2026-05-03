@@ -10,6 +10,7 @@ export default function Productos() {
   const [cargando, setCargando] = useState(true)
   const [error, setError] = useState(null)
   const [editando, setEditando] = useState(null)
+  const [creando, setCreando] = useState(false)
   const [formData, setFormData] = useState({
     nombre: "",
     descripcion: "",
@@ -43,6 +44,7 @@ export default function Productos() {
   }
 
   const handleEditar = (producto) => {
+    setCreando(false)
     setEditando(producto.id_producto)
     setFormData({
       nombre: producto.nombre,
@@ -55,8 +57,23 @@ export default function Productos() {
     })
   }
 
+  const handleCrear = () => {
+    setCreando(true)
+    setEditando(null)
+    setFormData({
+      nombre: "",
+      descripcion: "",
+      precio_actual: 0,
+      stock: 0,
+      activo: true,
+      id_categoria: "",
+      id_proveedor: "",
+    })
+  }
+
   const handleCancelar = () => {
     setEditando(null)
+    setCreando(false)
     setFormData({
       nombre: "",
       descripcion: "",
@@ -78,12 +95,17 @@ export default function Productos() {
       return
     }
     try {
-      await productosServicio.actualizar(editando, formData)
-      setProductos(
-        productos.map((p) =>
-          p.id_producto === editando ? { ...p, ...formData } : p
+      if (creando) {
+        const response = await productosServicio.crear(formData)
+        setProductos([...productos, response.data])
+      } else {
+        await productosServicio.actualizar(editando, formData)
+        setProductos(
+          productos.map((p) =>
+            p.id_producto === editando ? { ...p, ...formData } : p
+          )
         )
-      )
+      }
       handleCancelar()
     } catch (err) {
       setError(err.message)
@@ -123,6 +145,21 @@ export default function Productos() {
   return (
     <div style={{ padding: "20px" }}>
       <h1>Productos</h1>
+      <button
+        onClick={handleCrear}
+        style={{
+          backgroundColor: "#10b981",
+          color: "white",
+          border: "none",
+          padding: "10px 20px",
+          borderRadius: "4px",
+          cursor: "pointer",
+          marginBottom: "20px",
+          fontWeight: "bold",
+        }}
+      >
+        + Crear Nuevo Producto
+      </button>
       <table style={{ width: "100%", borderCollapse: "collapse" }}>
         <thead>
           <tr style={{ borderBottom: "2px solid #ddd", backgroundColor: "#f8f8f8" }}>
@@ -191,7 +228,7 @@ export default function Productos() {
         </tbody>
       </table>
 
-      {editando && (
+      {(editando || creando) && (
         <div
           style={{
             position: "fixed",
@@ -218,7 +255,7 @@ export default function Productos() {
               overflowY: "auto",
             }}
           >
-            <h2>Editar Producto</h2>
+            <h2>{creando ? "Crear Producto" : "Editar Producto"}</h2>
             <div style={{ marginBottom: "15px" }}>
               <label style={{ display: "block", marginBottom: "5px", fontWeight: "bold" }}>
                 Nombre
