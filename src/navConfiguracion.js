@@ -17,7 +17,7 @@ export const secciones_Navegacion = [
       { id: "empleados",      label: "Empleados",         path: "/catalogo/empleados"      },
       { id: "categorias",     label: "Categorías",        path: "/catalogo/categorias"     },
       { id: "proveedores",    label: "Proveedores",       path: "/catalogo/proveedores"    },
-      { id: "detalleCompra", label: "Detalle de compra", path: "/catalogo/detalle-compra" },
+      { id: "detalleCompra", label: "Detalle de compra", path: "/catalogo/detalleCompra" },
     ],
   },
   {
