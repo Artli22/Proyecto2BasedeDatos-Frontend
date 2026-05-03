@@ -30,10 +30,9 @@ export default function Categorias() {
       <h1>Categorías</h1>
       <table style={{ width: "100%", borderCollapse: "collapse" }}>
         <thead>
-          <tr style={{ borderBottom: "2px solid #ddd", backgroundColor: "#f8f8f8" }}>
-            <th style={{ padding: "10px", textAlign: "left" }}>ID</th>
-            <th style={{ padding: "10px", textAlign: "left" }}>Nombre</th>
-            <th style={{ padding: "10px", textAlign: "left" }}>Descripción</th>
+          <tr style={{ borderBottom: "2px solid #D0192B", backgroundColor: "#1A2A5E", color: "white" }}>
+            <th style={{ padding: "10px", textAlign: "left", color: "white" }}>ID</th>
+            <th style={{ padding: "10px", textAlign: "left", color: "white" }}>Nombre</th>
           </tr>
         </thead>
         <tbody>
@@ -42,12 +41,11 @@ export default function Categorias() {
               <tr key={categoria.id_categoria} style={{ borderBottom: "1px solid #ddd" }}>
                 <td style={{ padding: "10px" }}>{categoria.id_categoria}</td>
                 <td style={{ padding: "10px" }}>{categoria.nombre}</td>
-                <td style={{ padding: "10px" }}>{categoria.descripcion || "-"}</td>
               </tr>
             ))
           ) : (
             <tr>
-              <td colSpan="3" style={{ padding: "10px", textAlign: "center" }}>
+              <td colSpan="2" style={{ padding: "10px", textAlign: "center" }}>
                 No hay categorías disponibles
               </td>
             </tr>

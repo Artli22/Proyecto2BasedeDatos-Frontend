@@ -30,16 +30,16 @@ export default function Auditoria() {
       <h1>Auditoría de Ventas</h1>
       <table style={{ width: "100%", borderCollapse: "collapse" }}>
         <thead>
-          <tr style={{ borderBottom: "2px solid #ddd", backgroundColor: "#f8f8f8" }}>
-            <th style={{ padding: "10px", textAlign: "left" }}>ID Compra</th>
-            <th style={{ padding: "10px", textAlign: "left" }}>Factura</th>
-            <th style={{ padding: "10px", textAlign: "left" }}>Fecha</th>
-            <th style={{ padding: "10px", textAlign: "left" }}>Método Pago</th>
-            <th style={{ padding: "10px", textAlign: "left" }}>Estado</th>
-            <th style={{ padding: "10px", textAlign: "left" }}>Total</th>
-            <th style={{ padding: "10px", textAlign: "left" }}>Cliente</th>
-            <th style={{ padding: "10px", textAlign: "left" }}>Email Cliente</th>
-            <th style={{ padding: "10px", textAlign: "left" }}>Empleado Cajero</th>
+          <tr style={{ borderBottom: "2px solid #D0192B", backgroundColor: "#1A2A5E", color: "white" }}>
+            <th style={{ padding: "10px", textAlign: "left", color: "white" }}>ID Compra</th>
+            <th style={{ padding: "10px", textAlign: "left", color: "white" }}>Factura</th>
+            <th style={{ padding: "10px", textAlign: "left", color: "white" }}>Fecha</th>
+            <th style={{ padding: "10px", textAlign: "left", color: "white" }}>Método Pago</th>
+            <th style={{ padding: "10px", textAlign: "left", color: "white" }}>Estado</th>
+            <th style={{ padding: "10px", textAlign: "left", color: "white" }}>Total</th>
+            <th style={{ padding: "10px", textAlign: "left", color: "white" }}>Cliente</th>
+            <th style={{ padding: "10px", textAlign: "left", color: "white" }}>Email Cliente</th>
+            <th style={{ padding: "10px", textAlign: "left", color: "white" }}>Empleado Cajero</th>
           </tr>
         </thead>
         <tbody>

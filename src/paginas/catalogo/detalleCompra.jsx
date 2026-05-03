@@ -30,12 +30,12 @@ export default function DetalleCompra() {
       <h1>Detalles de Compra</h1>
       <table style={{ width: "100%", borderCollapse: "collapse" }}>
         <thead>
-          <tr style={{ borderBottom: "2px solid #ddd", backgroundColor: "#f8f8f8" }}>
-            <th style={{ padding: "10px", textAlign: "left" }}>ID Compra</th>
-            <th style={{ padding: "10px", textAlign: "left" }}>ID Producto</th>
-            <th style={{ padding: "10px", textAlign: "left" }}>Cantidad</th>
-            <th style={{ padding: "10px", textAlign: "left" }}>Precio Unitario</th>
-            <th style={{ padding: "10px", textAlign: "left" }}>Subtotal</th>
+          <tr style={{ borderBottom: "2px solid #D0192B", backgroundColor: "#1A2A5E", color: "white" }}>
+            <th style={{ padding: "10px", textAlign: "left", color: "white" }}>ID Compra</th>
+            <th style={{ padding: "10px", textAlign: "left", color: "white" }}>ID Producto</th>
+            <th style={{ padding: "10px", textAlign: "left", color: "white" }}>Cantidad</th>
+            <th style={{ padding: "10px", textAlign: "left", color: "white" }}>Precio Unitario</th>
+            <th style={{ padding: "10px", textAlign: "left", color: "white" }}>Subtotal</th>
           </tr>
         </thead>
         <tbody>

@@ -30,14 +30,14 @@ export default function StockCritico() {
       <h1>Stock Crítico</h1>
       <table style={{ width: "100%", borderCollapse: "collapse" }}>
         <thead>
-          <tr style={{ borderBottom: "2px solid #ddd", backgroundColor: "#f8f8f8" }}>
-            <th style={{ padding: "10px", textAlign: "left" }}>ID Producto</th>
-            <th style={{ padding: "10px", textAlign: "left" }}>Producto</th>
-            <th style={{ padding: "10px", textAlign: "left" }}>Categoría</th>
-            <th style={{ padding: "10px", textAlign: "left" }}>Proveedor</th>
-            <th style={{ padding: "10px", textAlign: "left" }}>Teléfono Proveedor</th>
-            <th style={{ padding: "10px", textAlign: "left" }}>Stock Actual</th>
-            <th style={{ padding: "10px", textAlign: "left" }}>Fecha Vencimiento</th>
+          <tr style={{ borderBottom: "2px solid #D0192B", backgroundColor: "#1A2A5E", color: "white" }}>
+            <th style={{ padding: "10px", textAlign: "left", color: "white" }}>ID Producto</th>
+            <th style={{ padding: "10px", textAlign: "left", color: "white" }}>Producto</th>
+            <th style={{ padding: "10px", textAlign: "left", color: "white" }}>Categoría</th>
+            <th style={{ padding: "10px", textAlign: "left", color: "white" }}>Proveedor</th>
+            <th style={{ padding: "10px", textAlign: "left", color: "white" }}>Teléfono Proveedor</th>
+            <th style={{ padding: "10px", textAlign: "left", color: "white" }}>Stock Actual</th>
+            <th style={{ padding: "10px", textAlign: "left", color: "white" }}>Fecha Vencimiento</th>
           </tr>
         </thead>
         <tbody>

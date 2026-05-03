@@ -148,7 +148,7 @@ export default function Productos() {
       <button
         onClick={handleCrear}
         style={{
-          backgroundColor: "#10b981",
+          backgroundColor: "#D0192B",
           color: "white",
           border: "none",
           padding: "10px 20px",
@@ -162,15 +162,15 @@ export default function Productos() {
       </button>
       <table style={{ width: "100%", borderCollapse: "collapse" }}>
         <thead>
-          <tr style={{ borderBottom: "2px solid #ddd", backgroundColor: "#f8f8f8" }}>
-            <th style={{ padding: "10px", textAlign: "left" }}>ID</th>
-            <th style={{ padding: "10px", textAlign: "left" }}>Nombre</th>
-            <th style={{ padding: "10px", textAlign: "left" }}>Precio</th>
-            <th style={{ padding: "10px", textAlign: "left" }}>Stock</th>
-            <th style={{ padding: "10px", textAlign: "left" }}>Categoría</th>
-            <th style={{ padding: "10px", textAlign: "left" }}>Proveedor</th>
-            <th style={{ padding: "10px", textAlign: "left" }}>Activo</th>
-            <th style={{ padding: "10px", textAlign: "left" }}>Acciones</th>
+          <tr style={{ borderBottom: "2px solid #D0192B", backgroundColor: "#1A2A5E", color: "white" }}>
+            <th style={{ padding: "10px", textAlign: "left", color: "white" }}>ID</th>
+            <th style={{ padding: "10px", textAlign: "left", color: "white" }}>Nombre</th>
+            <th style={{ padding: "10px", textAlign: "left", color: "white" }}>Precio</th>
+            <th style={{ padding: "10px", textAlign: "left", color: "white" }}>Stock</th>
+            <th style={{ padding: "10px", textAlign: "left", color: "white" }}>Categoría</th>
+            <th style={{ padding: "10px", textAlign: "left", color: "white" }}>Proveedor</th>
+            <th style={{ padding: "10px", textAlign: "left", color: "white" }}>Activo</th>
+            <th style={{ padding: "10px", textAlign: "left", color: "white" }}>Acciones</th>
           </tr>
         </thead>
         <tbody>
@@ -192,7 +192,7 @@ export default function Productos() {
                   <button
                     onClick={() => handleEditar(producto)}
                     style={{
-                      backgroundColor: "#2563eb",
+                      backgroundColor: "#1A2A5E",
                       color: "white",
                       border: "none",
                       padding: "5px 10px",
@@ -205,7 +205,7 @@ export default function Productos() {
                   <button
                     onClick={() => handleToggleActivo(producto)}
                     style={{
-                      backgroundColor: producto.activo ? "#dc2626" : "#10b981",
+                      backgroundColor: producto.activo ? "#D0192B" : "#10b981",
                       color: "white",
                       border: "none",
                       padding: "5px 10px",
@@ -398,7 +398,7 @@ export default function Productos() {
               <button
                 onClick={handleGuardar}
                 style={{
-                  backgroundColor: "#10b981",
+                  backgroundColor: "#D0192B",
                   color: "white",
                   border: "none",
                   padding: "10px 20px",

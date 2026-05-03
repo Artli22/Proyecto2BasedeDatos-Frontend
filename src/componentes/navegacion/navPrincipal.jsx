@@ -1,12 +1,15 @@
 import { NavLink } from "react-router-dom"
 import { secciones_Navegacion } from "../../navConfiguracion"
+import logo from "../../img/Buy_n_Large_Logo.png"
 
 export default function TopNav() {
   return (
-    <header style={{ display: "flex", alignItems: "center", gap: "1rem", padding: "0.75rem 1.5rem", borderBottom: "1px solid #e2e8f0", backgroundColor: "#fff" }}>
-      <span style={{ fontWeight: 600, fontSize: "1rem", marginRight: "1rem" }}>
-        Auditoria App
-      </span>
+    <header style={{ display: "flex", alignItems: "center", gap: "1rem", padding: "0.75rem 1.5rem", borderBottom: "2px solid #D0192B", backgroundColor: "#1A2A5E" }}>
+      <img 
+        src={logo} 
+        alt="Auditoria App Logo" 
+        style={{ height: "45px", width: "auto", marginRight: "0.5rem" }} 
+      />
       <nav style={{ display: "flex", gap: "0.25rem" }}>
         {secciones_Navegacion.map((section) => (
           <NavLink
@@ -18,8 +21,8 @@ export default function TopNav() {
               textDecoration: "none",
               fontSize: "0.9rem",
               fontWeight: isActive ? 600 : 400,
-              color: isActive ? "#1d4ed8" : "#374151",
-              backgroundColor: isActive ? "#eff6ff" : "transparent",
+              color: isActive ? "#D0192B" : "#ffffff",
+              backgroundColor: isActive ? "#e8edf7" : "transparent",
             })}
           >
             {section.label}

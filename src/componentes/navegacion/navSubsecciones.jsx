@@ -9,7 +9,7 @@ export default function SectionTabs() {
   if (!seccionActual) return null
 
   return (
-    <nav style={{ display: "flex", gap: "0.25rem", padding: "0.5rem 1.5rem", borderBottom: "1px solid #e2e8f0", backgroundColor: "#f8fafc" }}>
+    <nav style={{ display: "flex", gap: "0.25rem", padding: "0.5rem 1.5rem", borderBottom: "1px solid #e8edf7", backgroundColor: "#f0f2f7" }}>
       {seccionActual.tabs.map((tab) => (
         <NavLink
           key={tab.id}
@@ -20,8 +20,9 @@ export default function SectionTabs() {
             textDecoration: "none",
             fontSize: "0.85rem",
             fontWeight: isActive ? 600 : 400,
-            color: isActive ? "#1d4ed8" : "#6b7280",
-            backgroundColor: isActive ? "#eff6ff" : "transparent",
+            color: isActive ? "#1A2A5E" : "#6b7280",
+            borderBottom: isActive ? "3px solid #D0192B" : "none",
+            backgroundColor: isActive ? "#e8edf7" : "transparent",
           })}
         >
           {tab.label}

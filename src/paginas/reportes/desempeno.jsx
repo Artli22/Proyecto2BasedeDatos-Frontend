@@ -30,13 +30,13 @@ export default function Desempeno() {
       <h1>Desempeño de Empleados</h1>
       <table style={{ width: "100%", borderCollapse: "collapse" }}>
         <thead>
-          <tr style={{ borderBottom: "2px solid #ddd", backgroundColor: "#f8f8f8" }}>
-            <th style={{ padding: "10px", textAlign: "left" }}>ID Empleado</th>
-            <th style={{ padding: "10px", textAlign: "left" }}>Nombre</th>
-            <th style={{ padding: "10px", textAlign: "left" }}>Total Transacciones</th>
-            <th style={{ padding: "10px", textAlign: "left" }}>Monto Total Vendido</th>
-            <th style={{ padding: "10px", textAlign: "left" }}>Ticket Promedio</th>
-            <th style={{ padding: "10px", textAlign: "left" }}>Última Venta</th>
+          <tr style={{ borderBottom: "2px solid #D0192B", backgroundColor: "#1A2A5E", color: "white" }}>
+            <th style={{ padding: "10px", textAlign: "left", color: "white" }}>ID Empleado</th>
+            <th style={{ padding: "10px", textAlign: "left", color: "white" }}>Nombre</th>
+            <th style={{ padding: "10px", textAlign: "left", color: "white" }}>Total Transacciones</th>
+            <th style={{ padding: "10px", textAlign: "left", color: "white" }}>Monto Total Vendido</th>
+            <th style={{ padding: "10px", textAlign: "left", color: "white" }}>Ticket Promedio</th>
+            <th style={{ padding: "10px", textAlign: "left", color: "white" }}>\u00daltima Venta</th>
           </tr>
         </thead>
         <tbody>

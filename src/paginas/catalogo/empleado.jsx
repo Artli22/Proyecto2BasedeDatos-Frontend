@@ -30,13 +30,12 @@ export default function Empleados() {
       <h1>Empleados</h1>
       <table style={{ width: "100%", borderCollapse: "collapse" }}>
         <thead>
-          <tr style={{ borderBottom: "2px solid #ddd", backgroundColor: "#f8f8f8" }}>
-            <th style={{ padding: "10px", textAlign: "left" }}>ID</th>
-            <th style={{ padding: "10px", textAlign: "left" }}>Nombre</th>
-            <th style={{ padding: "10px", textAlign: "left" }}>Email</th>
-            <th style={{ padding: "10px", textAlign: "left" }}>Teléfono</th>
-            <th style={{ padding: "10px", textAlign: "left" }}>Puesto</th>
-            <th style={{ padding: "10px", textAlign: "left" }}>Salario</th>
+          <tr style={{ borderBottom: "2px solid #D0192B", backgroundColor: "#1A2A5E", color: "white" }}>
+            <th style={{ padding: "10px", textAlign: "left", color: "white" }}>ID</th>
+            <th style={{ padding: "10px", textAlign: "left", color: "white" }}>Nombre</th>
+            <th style={{ padding: "10px", textAlign: "left", color: "white" }}>Teléfono</th>
+            <th style={{ padding: "10px", textAlign: "left", color: "white" }}>Correo</th>
+            <th style={{ padding: "10px", textAlign: "left", color: "white" }}>Activo</th>
           </tr>
         </thead>
         <tbody>
@@ -45,15 +44,14 @@ export default function Empleados() {
               <tr key={empleado.id_empleado} style={{ borderBottom: "1px solid #ddd" }}>
                 <td style={{ padding: "10px" }}>{empleado.id_empleado}</td>
                 <td style={{ padding: "10px" }}>{empleado.nombre}</td>
-                <td style={{ padding: "10px" }}>{empleado.email || "-"}</td>
                 <td style={{ padding: "10px" }}>{empleado.telefono || "-"}</td>
-                <td style={{ padding: "10px" }}>{empleado.puesto || "-"}</td>
-                <td style={{ padding: "10px" }}>Q{empleado.salario?.toFixed(2) || "0.00"}</td>
+                <td style={{ padding: "10px" }}>{empleado.correo || "-"}</td>
+                <td style={{ padding: "10px" }}>{empleado.activo ? "Sí" : "No"}</td>
               </tr>
             ))
           ) : (
             <tr>
-              <td colSpan="6" style={{ padding: "10px", textAlign: "center" }}>
+              <td colSpan="5" style={{ padding: "10px", textAlign: "center" }}>
                 No hay empleados disponibles
               </td>
             </tr>

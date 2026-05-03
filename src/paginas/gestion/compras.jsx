@@ -189,7 +189,7 @@ export default function Compras() {
       <button
         onClick={handleCrear}
         style={{
-          backgroundColor: "#10b981",
+          backgroundColor: "#D0192B",
           color: "white",
           border: "none",
           padding: "10px 20px",
@@ -203,16 +203,16 @@ export default function Compras() {
       </button>
       <table style={{ width: "100%", borderCollapse: "collapse" }}>
         <thead>
-          <tr style={{ borderBottom: "2px solid #ddd", backgroundColor: "#f8f8f8" }}>
-            <th style={{ padding: "10px", textAlign: "left" }}>ID</th>
-            <th style={{ padding: "10px", textAlign: "left" }}>Factura</th>
-            <th style={{ padding: "10px", textAlign: "left" }}>Fecha</th>
-            <th style={{ padding: "10px", textAlign: "left" }}>Total</th>
-            <th style={{ padding: "10px", textAlign: "left" }}>Método Pago</th>
-            <th style={{ padding: "10px", textAlign: "left" }}>Cliente</th>
-            <th style={{ padding: "10px", textAlign: "left" }}>Empleado</th>
-            <th style={{ padding: "10px", textAlign: "left" }}>Estado</th>
-            <th style={{ padding: "10px", textAlign: "left" }}>Acciones</th>
+          <tr style={{ borderBottom: "2px solid #D0192B", backgroundColor: "#1A2A5E", color: "white" }}>
+            <th style={{ padding: "10px", textAlign: "left", color: "white" }}>ID</th>
+            <th style={{ padding: "10px", textAlign: "left", color: "white" }}>Factura</th>
+            <th style={{ padding: "10px", textAlign: "left", color: "white" }}>Fecha</th>
+            <th style={{ padding: "10px", textAlign: "left", color: "white" }}>Total</th>
+            <th style={{ padding: "10px", textAlign: "left", color: "white" }}>Método Pago</th>
+            <th style={{ padding: "10px", textAlign: "left", color: "white" }}>Cliente</th>
+            <th style={{ padding: "10px", textAlign: "left", color: "white" }}>Empleado</th>
+            <th style={{ padding: "10px", textAlign: "left", color: "white" }}>Estado</th>
+            <th style={{ padding: "10px", textAlign: "left", color: "white" }}>Acciones</th>
           </tr>
         </thead>
         <tbody>
@@ -235,7 +235,7 @@ export default function Compras() {
                   <button
                     onClick={() => handleEditar(compra)}
                     style={{
-                      backgroundColor: "#2563eb",
+                      backgroundColor: "#1A2A5E",
                       color: "white",
                       border: "none",
                       padding: "5px 10px",
@@ -249,7 +249,7 @@ export default function Compras() {
                     <button
                       onClick={() => handleCancelarCompra(compra.id_compra)}
                       style={{
-                        backgroundColor: "#dc2626",
+                        backgroundColor: "#D0192B",
                         color: "white",
                         border: "none",
                         padding: "5px 10px",
@@ -455,7 +455,7 @@ export default function Compras() {
                       setItemCompra({ id_producto: 0, cantidad: 1 })
                     }}
                     style={{
-                      backgroundColor: "#3b82f6",
+                      backgroundColor: "#1A2A5E",
                       color: "white",
                       border: "none",
                       padding: "8px 15px",
@@ -484,7 +484,7 @@ export default function Compras() {
                                 })
                               }}
                               style={{
-                                backgroundColor: "#ef4444",
+                                backgroundColor: "#D0192B",
                                 color: "white",
                                 border: "none",
                                 padding: "4px 10px",
@@ -526,7 +526,7 @@ export default function Compras() {
               <button
                 onClick={handleGuardar}
                 style={{
-                  backgroundColor: "#10b981",
+                  backgroundColor: "#D0192B",
                   color: "white",
                   border: "none",
                   padding: "10px 20px",
