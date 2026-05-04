@@ -16,6 +16,7 @@ export default function Productos() {
     descripcion: "",
     precio_actual: 0,
     stock: 0,
+    fecha_vencimiento: "",
     activo: true,
     id_categoria: "",
     id_proveedor: "",
@@ -51,6 +52,7 @@ export default function Productos() {
       descripcion: producto.descripcion || "",
       precio_actual: producto.precio_actual,
       stock: producto.stock,
+      fecha_vencimiento: producto.fecha_vencimiento || "",
       activo: producto.activo,
       id_categoria: producto.id_categoria,
       id_proveedor: producto.id_proveedor,
@@ -65,6 +67,7 @@ export default function Productos() {
       descripcion: "",
       precio_actual: 0,
       stock: 0,
+      fecha_vencimiento: "",
       activo: true,
       id_categoria: "",
       id_proveedor: "",
@@ -79,6 +82,7 @@ export default function Productos() {
       descripcion: "",
       precio_actual: 0,
       stock: 0,
+      fecha_vencimiento: "",
       activo: true,
       id_categoria: "",
       id_proveedor: "",
@@ -316,6 +320,23 @@ export default function Productos() {
                 type="number"
                 value={formData.stock}
                 onChange={(e) => setFormData({ ...formData, stock: parseInt(e.target.value) })}
+                style={{
+                  width: "100%",
+                  padding: "8px",
+                  border: "1px solid #ddd",
+                  borderRadius: "4px",
+                  boxSizing: "border-box",
+                }}
+              />
+            </div>
+            <div style={{ marginBottom: "15px" }}>
+              <label style={{ display: "block", marginBottom: "5px", fontWeight: "bold" }}>
+                Fecha de Vencimiento
+              </label>
+              <input
+                type="date"
+                value={formData.fecha_vencimiento}
+                onChange={(e) => setFormData({ ...formData, fecha_vencimiento: e.target.value })}
                 style={{
                   width: "100%",
                   padding: "8px",

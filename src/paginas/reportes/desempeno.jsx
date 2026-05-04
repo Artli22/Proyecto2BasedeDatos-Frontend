@@ -36,7 +36,7 @@ export default function Desempeno() {
             <th style={{ padding: "10px", textAlign: "left", color: "white" }}>Total Transacciones</th>
             <th style={{ padding: "10px", textAlign: "left", color: "white" }}>Monto Total Vendido</th>
             <th style={{ padding: "10px", textAlign: "left", color: "white" }}>Ticket Promedio</th>
-            <th style={{ padding: "10px", textAlign: "left", color: "white" }}>\u00daltima Venta</th>
+            <th style={{ padding: "10px", textAlign: "left", color: "white" }}>Fecha de Ultima Venta</th>
           </tr>
         </thead>
         <tbody>
