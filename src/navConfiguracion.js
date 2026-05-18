@@ -5,6 +5,7 @@ export const secciones_Navegacion = [
     path: "/gestion",
     tabs: [
       { id: "clientes",  label: "Clientes",  path: "/gestion/clientes"  },
+      { id: "empleados",  label: "Empleados",  path: "/gestion/empleados"  },
       { id: "productos", label: "Productos", path: "/gestion/productos" },
       { id: "compras",   label: "Compras",   path: "/gestion/compras"   },
     ],
@@ -14,7 +15,6 @@ export const secciones_Navegacion = [
     label: "Catálogo",
     path: "/catalogo",
     tabs: [
-      { id: "empleados",      label: "Empleados",         path: "/catalogo/empleados"      },
       { id: "categorias",     label: "Categorías",        path: "/catalogo/categorias"     },
       { id: "proveedores",    label: "Proveedores",       path: "/catalogo/proveedores"    },
       { id: "detalleCompra", label: "Detalle de compra", path: "/catalogo/detalleCompra" },
