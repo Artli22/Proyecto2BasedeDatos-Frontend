@@ -1,5 +1,9 @@
 import { createBrowserRouter, RouterProvider, Navigate } from "react-router-dom"
+import { useState, useEffect } from "react"
 import Formato from "./formatoApp"
+import Login from "./Login"
+import { loginServicio } from "./servicios/loginServicio"
+import { ProtectedRoute } from "./componentes/ProtectedRoute"
 import Clientes from "./paginas/gestion/clientes"
 import Empleados from "./paginas/gestion/empleados"
 import Productos from "./paginas/gestion/productos"
@@ -20,23 +24,129 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <Navigate to="/gestion/clientes" replace /> },
 
-      { path: "gestion/clientes",  element: <Clientes />  },
-      { path: "gestion/empleados",  element: <Empleados />  },
-      { path: "gestion/productos", element: <Productos /> },
-      { path: "gestion/compras",   element: <Compras />   },
+      // ========== GESTIÓN ==========
+      // Clientes: Todos excepto RH
+      {
+        element: <ProtectedRoute requiredRoles={["administrador", "auditor", "gerente", "vendedor"]} />,
+        children: [
+          { path: "gestion/clientes", element: <Clientes /> },
+        ]
+      },
 
-      { path: "catalogo/categorias",     element: <Categorias />     },
-      { path: "catalogo/proveedores",    element: <Proveedores />    },
-      { path: "catalogo/detalleCompra", element: <DetalleCompra />   },
+      // Empleados: Admin, Auditor, Gerente, RH
+      {
+        element: <ProtectedRoute requiredRoles={["administrador", "auditor", "gerente", "recursohumano"]} />,
+        children: [
+          { path: "gestion/empleados", element: <Empleados /> },
+        ]
+      },
 
-      { path: "reportes/auditoria",    element: <Auditoria />        },
-      { path: "reportes/rentabilidad", element: <Rentabilidad />     },
-      { path: "reportes/desempeno",    element: <Desempeno />        },
-      { path: "reportes/stock",        element: <StockCritico />     },
+      // Productos: Admin, Auditor, Gerente, Vendedor
+      {
+        element: <ProtectedRoute requiredRoles={["administrador", "auditor", "gerente", "vendedor"]} />,
+        children: [
+          { path: "gestion/productos", element: <Productos /> },
+        ]
+      },
+
+      // Compras: Admin, Auditor, Gerente, Vendedor
+      {
+        element: <ProtectedRoute requiredRoles={["administrador", "auditor", "gerente", "vendedor"]} />,
+        children: [
+          { path: "gestion/compras", element: <Compras /> },
+        ]
+      },
+
+      // ========== CATÁLOGO ==========
+      // Categorías: Todos excepto RH
+      {
+        element: <ProtectedRoute requiredRoles={["administrador", "auditor", "gerente", "vendedor"]} />,
+        children: [
+          { path: "catalogo/categorias", element: <Categorias /> },
+        ]
+      },
+
+      // Proveedores: Admin, Auditor, Gerente (NO Vendedor, NO RH)
+      {
+        element: <ProtectedRoute requiredRoles={["administrador", "auditor", "gerente"]} />,
+        children: [
+          { path: "catalogo/proveedores", element: <Proveedores /> },
+        ]
+      },
+
+      // Detalle Compra: Todos excepto RH
+      {
+        element: <ProtectedRoute requiredRoles={["administrador", "auditor", "gerente", "vendedor"]} />,
+        children: [
+          { path: "catalogo/detalleCompra", element: <DetalleCompra /> },
+        ]
+      },
+
+      // ========== REPORTES ==========
+      // Auditoría: Admin, Auditor
+      {
+        element: <ProtectedRoute requiredRoles={["administrador", "auditor"]} />,
+        children: [
+          { path: "reportes/auditoria", element: <Auditoria /> },
+        ]
+      },
+
+      // Rentabilidad: Admin, Auditor, Gerente (NO Vendedor, NO RH)
+      {
+        element: <ProtectedRoute requiredRoles={["administrador", "auditor", "gerente"]} />,
+        children: [
+          { path: "reportes/rentabilidad", element: <Rentabilidad /> },
+        ]
+      },
+
+      // Desempeño: Admin, Auditor, RH
+      {
+        element: <ProtectedRoute requiredRoles={["administrador", "auditor", "recursohumano"]} />,
+        children: [
+          { path: "reportes/desempeno", element: <Desempeno /> },
+        ]
+      },
+
+      // Stock Crítico: Todos
+      {
+        element: <ProtectedRoute requiredRoles={["administrador", "auditor", "gerente", "vendedor", "recursohumano"]} />,
+        children: [
+          { path: "reportes/stock", element: <StockCritico /> },
+        ]
+      },
     ],
   },
 ])
 
 export default function App() {
+  const [autenticado, setAutenticado] = useState(false)
+  const [cargando, setCargando] = useState(true)
+
+  useEffect(() => {
+    // Normalizar rol viejo: quitar prefijo "rol_" y convertir a minúsculas
+    const rolViejo = localStorage.getItem("rol")
+    if (rolViejo) {
+      localStorage.setItem("rol", rolViejo.replace("rol_", "").toLowerCase())
+    }
+
+    // Verificar si ya hay sesión activa
+    if (loginServicio.estaAutenticado()) {
+      setAutenticado(true)
+    }
+    setCargando(false)
+  }, [])
+
+  const handleLoginSuccess = () => {
+    setAutenticado(true)
+  }
+
+  if (cargando) {
+    return <div>Cargando...</div>
+  }
+
+  if (!autenticado) {
+    return <Login onLoginSuccess={handleLoginSuccess} />
+  }
+
   return <RouterProvider router={router} />
 }
