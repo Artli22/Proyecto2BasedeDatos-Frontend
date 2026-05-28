@@ -2,6 +2,8 @@ import { useEffect, useState } from "react"
 import { productosServicio } from "../../servicios/productosServicio"
 import { categoriasServicio } from "../../servicios/categoriasServicio"
 import { proveedoresServicio } from "../../servicios/proveedoresServicio"
+import { loginServicio } from "../../servicios/loginServicio"
+import { puedeHacer, columnaVisible } from "../../config/accionesPermiso"
 
 export default function Productos() {
   const [productos, setProductos] = useState([])
@@ -21,6 +23,12 @@ export default function Productos() {
     id_categoria: "",
     id_proveedor: "",
   })
+
+  const rol = loginServicio.obtenerRol()
+  const puedeCrear = puedeHacer("producto", rol, "crear")
+  const puedeEditar = puedeHacer("producto", rol, "editar")
+  const puedeEliminar = puedeHacer("producto", rol, "eliminar")
+  const verProveedor = columnaVisible("producto", rol, "id_proveedor")
 
   useEffect(() => {
     cargarDatos()
@@ -149,21 +157,23 @@ export default function Productos() {
   return (
     <div style={{ padding: "20px" }}>
       <h1>Productos</h1>
-      <button
-        onClick={handleCrear}
-        style={{
-          backgroundColor: "#D0192B",
-          color: "white",
-          border: "none",
-          padding: "10px 20px",
-          borderRadius: "4px",
-          cursor: "pointer",
-          marginBottom: "20px",
-          fontWeight: "bold",
-        }}
-      >
-        + Crear Nuevo Producto
-      </button>
+      {puedeCrear && (
+        <button
+          onClick={handleCrear}
+          style={{
+            backgroundColor: "#D0192B",
+            color: "white",
+            border: "none",
+            padding: "10px 20px",
+            borderRadius: "4px",
+            cursor: "pointer",
+            marginBottom: "20px",
+            fontWeight: "bold",
+          }}
+        >
+          + Crear Nuevo Producto
+        </button>
+      )}
       <table style={{ width: "100%", borderCollapse: "collapse" }}>
         <thead>
           <tr style={{ borderBottom: "2px solid #D0192B", backgroundColor: "#1A2A5E", color: "white" }}>
@@ -172,9 +182,9 @@ export default function Productos() {
             <th style={{ padding: "10px", textAlign: "left", color: "white" }}>Precio</th>
             <th style={{ padding: "10px", textAlign: "left", color: "white" }}>Stock</th>
             <th style={{ padding: "10px", textAlign: "left", color: "white" }}>Categoría</th>
-            <th style={{ padding: "10px", textAlign: "left", color: "white" }}>Proveedor</th>
+            {verProveedor && <th style={{ padding: "10px", textAlign: "left", color: "white" }}>Proveedor</th>}
             <th style={{ padding: "10px", textAlign: "left", color: "white" }}>Activo</th>
-            <th style={{ padding: "10px", textAlign: "left", color: "white" }}>Acciones</th>
+            {(puedeEditar || puedeEliminar) && <th style={{ padding: "10px", textAlign: "left", color: "white" }}>Acciones</th>}
           </tr>
         </thead>
         <tbody>
@@ -186,51 +196,57 @@ export default function Productos() {
                 <td style={{ padding: "10px" }}>Q{producto.precio_actual.toFixed(2)}</td>
                 <td style={{ padding: "10px" }}>{producto.stock}</td>
                 <td style={{ padding: "10px" }}>{getNombreCategoria(producto.id_categoria)}</td>
-                <td style={{ padding: "10px" }}>{getNombreProveedor(producto.id_proveedor)}</td>
+                {verProveedor && <td style={{ padding: "10px" }}>{getNombreProveedor(producto.id_proveedor)}</td>}
                 <td style={{ padding: "10px" }}>
                   <span style={{ color: producto.activo ? "green" : "red" }}>
                     {producto.activo ? "✓" : "✗"}
                   </span>
                 </td>
-                <td style={{ padding: "10px", display: "flex", gap: "5px" }}>
-                  <button
-                    onClick={() => handleEditar(producto)}
-                    style={{
-                      backgroundColor: "#1A2A5E",
-                      color: "white",
-                      border: "none",
-                      padding: "5px 10px",
-                      borderRadius: "4px",
-                      cursor: "pointer",
-                    }}
-                  >
-                    Editar
-                  </button>
-                  <button
-                    onClick={() => handleToggleActivo(producto)}
-                    style={{
-                      backgroundColor: producto.activo ? "#D0192B" : "#10b981",
-                      color: "white",
-                      border: "none",
-                      padding: "5px 10px",
-                      borderRadius: "4px",
-                      cursor: "pointer",
-                    }}
-                  >
-                    {producto.activo ? "Desactivar" : "Activar"}
-                  </button>
-                </td>
+                {(puedeEditar || puedeEliminar) && (
+                  <td style={{ padding: "10px", display: "flex", gap: "5px" }}>
+                    {puedeEditar && (
+                      <button
+                        onClick={() => handleEditar(producto)}
+                        style={{
+                          backgroundColor: "#1A2A5E",
+                          color: "white",
+                          border: "none",
+                          padding: "5px 10px",
+                          borderRadius: "4px",
+                          cursor: "pointer",
+                        }}
+                      >
+                        Editar
+                      </button>
+                    )}
+                    {puedeEliminar && (
+                      <button
+                        onClick={() => handleToggleActivo(producto)}
+                        style={{
+                          backgroundColor: producto.activo ? "#D0192B" : "#10b981",
+                          color: "white",
+                          border: "none",
+                          padding: "5px 10px",
+                          borderRadius: "4px",
+                          cursor: "pointer",
+                        }}
+                      >
+                        {producto.activo ? "Desactivar" : "Activar"}
+                      </button>
+                    )}
+                  </td>
+                )}
               </tr>
             ))
-          ) : (
-            <tr>
-              <td colSpan="8" style={{ padding: "10px", textAlign: "center" }}>
-                No hay productos registrados
-              </td>
-            </tr>
-          )}
+          ) : null}
         </tbody>
       </table>
+
+      {productos.length === 0 && (
+        <div style={{ padding: "20px", textAlign: "center", color: "#666" }}>
+          No se encontraron registros
+        </div>
+      )}
 
       {(editando || creando) && (
         <div
@@ -267,7 +283,7 @@ export default function Productos() {
               <input
                 type="text"
                 value={formData.nombre}
-                onChange={(e) => setFormData({ ...formData, nombre: e.target.value })}
+                onChange={(evento) => setFormData({ ...formData, nombre: evento.target.value })}
                 style={{
                   width: "100%",
                   padding: "8px",
@@ -283,7 +299,7 @@ export default function Productos() {
               </label>
               <textarea
                 value={formData.descripcion}
-                onChange={(e) => setFormData({ ...formData, descripcion: e.target.value })}
+                onChange={(evento) => setFormData({ ...formData, descripcion: evento.target.value })}
                 style={{
                   width: "100%",
                   padding: "8px",
@@ -302,7 +318,7 @@ export default function Productos() {
                 type="number"
                 step="0.01"
                 value={formData.precio_actual}
-                onChange={(e) => setFormData({ ...formData, precio_actual: parseFloat(e.target.value) })}
+                onChange={(evento) => setFormData({ ...formData, precio_actual: parseFloat(evento.target.value) })}
                 style={{
                   width: "100%",
                   padding: "8px",
@@ -319,7 +335,7 @@ export default function Productos() {
               <input
                 type="number"
                 value={formData.stock}
-                onChange={(e) => setFormData({ ...formData, stock: parseInt(e.target.value) })}
+                onChange={(evento) => setFormData({ ...formData, stock: parseInt(evento.target.value) })}
                 style={{
                   width: "100%",
                   padding: "8px",
@@ -336,7 +352,7 @@ export default function Productos() {
               <input
                 type="date"
                 value={formData.fecha_vencimiento}
-                onChange={(e) => setFormData({ ...formData, fecha_vencimiento: e.target.value })}
+                onChange={(evento) => setFormData({ ...formData, fecha_vencimiento: evento.target.value })}
                 style={{
                   width: "100%",
                   padding: "8px",
@@ -352,7 +368,7 @@ export default function Productos() {
               </label>
               <select
                 value={formData.id_categoria}
-                onChange={(e) => setFormData({ ...formData, id_categoria: parseInt(e.target.value) })}
+                onChange={(evento) => setFormData({ ...formData, id_categoria: parseInt(evento.target.value) })}
                 style={{
                   width: "100%",
                   padding: "8px",
@@ -369,35 +385,37 @@ export default function Productos() {
                 ))}
               </select>
             </div>
-            <div style={{ marginBottom: "15px" }}>
-              <label style={{ display: "block", marginBottom: "5px", fontWeight: "bold" }}>
-                Proveedor
-              </label>
-              <select
-                value={formData.id_proveedor}
-                onChange={(e) => setFormData({ ...formData, id_proveedor: parseInt(e.target.value) })}
-                style={{
-                  width: "100%",
-                  padding: "8px",
-                  border: "1px solid #ddd",
-                  borderRadius: "4px",
-                  boxSizing: "border-box",
-                }}
-              >
-                <option value="">Seleccionar proveedor</option>
-                {proveedores.map((prov) => (
-                  <option key={prov.id_proveedor} value={prov.id_proveedor}>
-                    {prov.nombre}
-                  </option>
-                ))}
-              </select>
-            </div>
+            {verProveedor && (
+              <div style={{ marginBottom: "15px" }}>
+                <label style={{ display: "block", marginBottom: "5px", fontWeight: "bold" }}>
+                  Proveedor
+                </label>
+                <select
+                  value={formData.id_proveedor}
+                  onChange={(evento) => setFormData({ ...formData, id_proveedor: parseInt(evento.target.value) })}
+                  style={{
+                    width: "100%",
+                    padding: "8px",
+                    border: "1px solid #ddd",
+                    borderRadius: "4px",
+                    boxSizing: "border-box",
+                  }}
+                >
+                  <option value="">Seleccionar proveedor</option>
+                  {proveedores.map((prov) => (
+                    <option key={prov.id_proveedor} value={prov.id_proveedor}>
+                      {prov.nombre}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
             <div style={{ marginBottom: "20px" }}>
               <label style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                 <input
                   type="checkbox"
                   checked={formData.activo}
-                  onChange={(e) => setFormData({ ...formData, activo: e.target.checked })}
+                  onChange={(evento) => setFormData({ ...formData, activo: evento.target.checked })}
                 />
                 <span>Activo</span>
               </label>

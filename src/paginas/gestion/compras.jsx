@@ -3,6 +3,8 @@ import { comprasServicio } from "../../servicios/comprasServicio"
 import { clientesServicio } from "../../servicios/clientesServicio"
 import { empleadosServicio } from "../../servicios/empleadosServicio"
 import { productosServicio } from "../../servicios/productosServicio"
+import { loginServicio } from "../../servicios/loginServicio"
+import { puedeHacer, columnaVisible } from "../../config/accionesPermiso"
 
 export default function Compras() {
   const [compras, setCompras] = useState([])
@@ -24,6 +26,14 @@ export default function Compras() {
     id_producto: 0,
     cantidad: 1,
   })
+
+  // Permisos del usuario actual
+  const rol = loginServicio.obtenerRol()
+  const puedeCrear = puedeHacer("compra", rol, "crear")
+  const puedeEditar = puedeHacer("compra", rol, "editar")
+  const puedeEliminar = puedeHacer("compra", rol, "eliminar")
+  const verTotal = columnaVisible("compra", rol, "total")
+  const verNumFactura = columnaVisible("compra", rol, "num_factura")
 
   useEffect(() => {
     cargarDatos()
@@ -186,33 +196,35 @@ export default function Compras() {
   return (
     <div style={{ padding: "20px" }}>
       <h1>Compras</h1>
-      <button
-        onClick={handleCrear}
-        style={{
-          backgroundColor: "#D0192B",
-          color: "white",
-          border: "none",
-          padding: "10px 20px",
-          borderRadius: "4px",
-          cursor: "pointer",
-          marginBottom: "20px",
-          fontWeight: "bold",
-        }}
-      >
-        + Crear Nueva Compra
-      </button>
+      {puedeCrear && (
+        <button
+          onClick={handleCrear}
+          style={{
+            backgroundColor: "#D0192B",
+            color: "white",
+            border: "none",
+            padding: "10px 20px",
+            borderRadius: "4px",
+            cursor: "pointer",
+            marginBottom: "20px",
+            fontWeight: "bold",
+          }}
+        >
+          + Crear Nueva Compra
+        </button>
+      )}
       <table style={{ width: "100%", borderCollapse: "collapse" }}>
         <thead>
           <tr style={{ borderBottom: "2px solid #D0192B", backgroundColor: "#1A2A5E", color: "white" }}>
             <th style={{ padding: "10px", textAlign: "left", color: "white" }}>ID</th>
-            <th style={{ padding: "10px", textAlign: "left", color: "white" }}>Factura</th>
+            {verNumFactura && <th style={{ padding: "10px", textAlign: "left", color: "white" }}>Factura</th>}
             <th style={{ padding: "10px", textAlign: "left", color: "white" }}>Fecha</th>
-            <th style={{ padding: "10px", textAlign: "left", color: "white" }}>Total</th>
+            {verTotal && <th style={{ padding: "10px", textAlign: "left", color: "white" }}>Total</th>}
             <th style={{ padding: "10px", textAlign: "left", color: "white" }}>Método Pago</th>
             <th style={{ padding: "10px", textAlign: "left", color: "white" }}>Cliente</th>
             <th style={{ padding: "10px", textAlign: "left", color: "white" }}>Empleado</th>
             <th style={{ padding: "10px", textAlign: "left", color: "white" }}>Estado</th>
-            <th style={{ padding: "10px", textAlign: "left", color: "white" }}>Acciones</th>
+            {(puedeEditar || puedeEliminar) && <th style={{ padding: "10px", textAlign: "left", color: "white" }}>Acciones</th>}
           </tr>
         </thead>
         <tbody>
@@ -220,9 +232,9 @@ export default function Compras() {
             compras.map((compra) => (
               <tr key={compra.id_compra} style={{ borderBottom: "1px solid #ddd" }}>
                 <td style={{ padding: "10px" }}>{compra.id_compra}</td>
-                <td style={{ padding: "10px" }}>{compra.num_factura || "-"}</td>
+                {verNumFactura && <td style={{ padding: "10px" }}>{compra.num_factura || "-"}</td>}
                 <td style={{ padding: "10px" }}>{compra.fecha}</td>
-                <td style={{ padding: "10px" }}>Q{compra.total.toFixed(2)}</td>
+                {verTotal && <td style={{ padding: "10px" }}>Q{compra.total.toFixed(2)}</td>}
                 <td style={{ padding: "10px" }}>{compra.metodo_pago || "-"}</td>
                 <td style={{ padding: "10px" }}>{getNombreCliente(compra.id_cliente)}</td>
                 <td style={{ padding: "10px" }}>{getNombreEmpleado(compra.id_empleado)}</td>
@@ -231,47 +243,51 @@ export default function Compras() {
                     {compra.estado}
                   </span>
                 </td>
-                <td style={{ padding: "10px", display: "flex", gap: "5px" }}>
-                  <button
-                    onClick={() => handleEditar(compra)}
-                    style={{
-                      backgroundColor: "#1A2A5E",
-                      color: "white",
-                      border: "none",
-                      padding: "5px 10px",
-                      borderRadius: "4px",
-                      cursor: "pointer",
-                    }}
-                  >
-                    Editar
-                  </button>
-                  {compra.estado === "completado" && (
-                    <button
-                      onClick={() => handleCancelarCompra(compra.id_compra)}
-                      style={{
-                        backgroundColor: "#D0192B",
-                        color: "white",
-                        border: "none",
-                        padding: "5px 10px",
-                        borderRadius: "4px",
-                        cursor: "pointer",
-                      }}
-                    >
-                      Cancelar
-                    </button>
-                  )}
-                </td>
+                {(puedeEditar || puedeEliminar) && (
+                  <td style={{ padding: "10px", display: "flex", gap: "5px" }}>
+                    {puedeEditar && (
+                      <button
+                        onClick={() => handleEditar(compra)}
+                        style={{
+                          backgroundColor: "#1A2A5E",
+                          color: "white",
+                          border: "none",
+                          padding: "5px 10px",
+                          borderRadius: "4px",
+                          cursor: "pointer",
+                        }}
+                      >
+                        Editar
+                      </button>
+                    )}
+                    {puedeEliminar && compra.estado === "completado" && (
+                      <button
+                        onClick={() => handleCancelarCompra(compra.id_compra)}
+                        style={{
+                          backgroundColor: "#D0192B",
+                          color: "white",
+                          border: "none",
+                          padding: "5px 10px",
+                          borderRadius: "4px",
+                          cursor: "pointer",
+                        }}
+                      >
+                        Cancelar
+                      </button>
+                    )}
+                  </td>
+                )}
               </tr>
             ))
-          ) : (
-            <tr>
-              <td colSpan="9" style={{ padding: "10px", textAlign: "center" }}>
-                No hay compras registradas
-              </td>
-            </tr>
-          )}
+          ) : null}
         </tbody>
       </table>
+
+      {compras.length === 0 && (
+        <div style={{ padding: "20px", textAlign: "center", color: "#666" }}>
+          No se encontraron registros
+        </div>
+      )}
 
       {(editando || creando) && (
         <div
@@ -311,7 +327,7 @@ export default function Compras() {
                   <input
                     type="date"
                     value={formData.fecha}
-                    onChange={(e) => setFormData({ ...formData, fecha: e.target.value })}
+                    onChange={(evento) => setFormData({ ...formData, fecha: evento.target.value })}
                     style={{
                       width: "100%",
                       padding: "8px",
@@ -329,7 +345,7 @@ export default function Compras() {
                   <input
                     type="text"
                     value={formData.metodo_pago}
-                    onChange={(e) => setFormData({ ...formData, metodo_pago: e.target.value })}
+                    onChange={(evento) => setFormData({ ...formData, metodo_pago: evento.target.value })}
                     style={{
                       width: "100%",
                       padding: "8px",
@@ -346,7 +362,7 @@ export default function Compras() {
                   </label>
                   <select
                     value={formData.id_cliente || ""}
-                    onChange={(e) => setFormData({ ...formData, id_cliente: parseInt(e.target.value) || 0 })}
+                    onChange={(evento) => setFormData({ ...formData, id_cliente: parseInt(evento.target.value) || 0 })}
                     style={{
                       width: "100%",
                       padding: "8px",
@@ -370,7 +386,7 @@ export default function Compras() {
                   </label>
                   <select
                     value={formData.id_empleado || ""}
-                    onChange={(e) => setFormData({ ...formData, id_empleado: parseInt(e.target.value) || 0 })}
+                    onChange={(evento) => setFormData({ ...formData, id_empleado: parseInt(evento.target.value) || 0 })}
                     style={{
                       width: "100%",
                       padding: "8px",
@@ -397,7 +413,7 @@ export default function Compras() {
                     </label>
                     <select
                       value={itemCompra.id_producto || ""}
-                      onChange={(e) => setItemCompra({ ...itemCompra, id_producto: parseInt(e.target.value) || 0 })}
+                      onChange={(evento) => setItemCompra({ ...itemCompra, id_producto: parseInt(evento.target.value) || 0 })}
                       style={{
                         width: "100%",
                         padding: "8px",
@@ -427,7 +443,7 @@ export default function Compras() {
                       type="number"
                       min="1"
                       value={itemCompra.cantidad}
-                      onChange={(e) => setItemCompra({ ...itemCompra, cantidad: parseInt(e.target.value) || 1 })}
+                      onChange={(evento) => setItemCompra({ ...itemCompra, cantidad: parseInt(evento.target.value) || 1 })}
                       style={{
                         width: "100%",
                         padding: "8px",

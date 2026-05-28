@@ -1,5 +1,8 @@
+
 import { useEffect, useState } from "react"
 import { clientesServicio } from "../../servicios/clientesServicio"
+import { loginServicio } from "../../servicios/loginServicio"
+import { puedeHacer, columnaVisible } from "../../config/accionesPermiso"
 
 export default function Clientes() {
   const [clientes, setClientes] = useState([])
@@ -8,6 +11,13 @@ export default function Clientes() {
   const [editando, setEditando] = useState(null)
   const [creando, setCreando] = useState(false)
   const [formData, setFormData] = useState({ nombre: "", telefono: "", correo: "", activo: true })
+
+  const rol = loginServicio.obtenerRol()
+  const puedeCrear = puedeHacer("cliente", rol, "crear")
+  const puedeEditar = puedeHacer("cliente", rol, "editar")
+  const puedeEliminar = puedeHacer("cliente", rol, "eliminar")
+  const verTelefono = columnaVisible("cliente", rol, "telefono")
+  const verCorreo = columnaVisible("cliente", rol, "correo")
 
   useEffect(() => {
     cargarClientes()
@@ -76,9 +86,9 @@ export default function Clientes() {
     const accion = nuevoEstado ? "activar" : "desactivar"
     if (!confirm(`¿Seguro de ${accion} este cliente?`)) return
     try {
-      await clientesServicio.actualizar(cliente.id_cliente, { 
-        ...cliente, 
-        activo: nuevoEstado 
+      await clientesServicio.actualizar(cliente.id_cliente, {
+        ...cliente,
+        activo: nuevoEstado,
       })
       setClientes(
         clientes.map((c) =>
@@ -96,30 +106,32 @@ export default function Clientes() {
   return (
     <div style={{ padding: "20px" }}>
       <h1>Clientes</h1>
-      <button
-        onClick={handleCrear}
-        style={{
-          backgroundColor: "#D0192B",
-          color: "white",
-          border: "none",
-          padding: "10px 20px",
-          borderRadius: "4px",
-          cursor: "pointer",
-          marginBottom: "20px",
-          fontWeight: "bold",
-        }}
-      >
-        + Crear Nuevo Cliente
-      </button>
+      {puedeCrear && (
+        <button
+          onClick={handleCrear}
+          style={{
+            backgroundColor: "#D0192B",
+            color: "white",
+            border: "none",
+            padding: "10px 20px",
+            borderRadius: "4px",
+            cursor: "pointer",
+            marginBottom: "20px",
+            fontWeight: "bold",
+          }}
+        >
+          + Crear Nuevo Cliente
+        </button>
+      )}
       <table style={{ width: "100%", borderCollapse: "collapse" }}>
         <thead>
           <tr style={{ borderBottom: "2px solid #D0192B", backgroundColor: "#1A2A5E", color: "white" }}>
             <th style={{ padding: "10px", textAlign: "left", color: "white" }}>ID</th>
             <th style={{ padding: "10px", textAlign: "left", color: "white" }}>Nombre</th>
-            <th style={{ padding: "10px", textAlign: "left", color: "white" }}>Teléfono</th>
-            <th style={{ padding: "10px", textAlign: "left", color: "white" }}>Correo</th>
+            {verTelefono && <th style={{ padding: "10px", textAlign: "left", color: "white" }}>Teléfono</th>}
+            {verCorreo && <th style={{ padding: "10px", textAlign: "left", color: "white" }}>Correo</th>}
             <th style={{ padding: "10px", textAlign: "left", color: "white" }}>Activo</th>
-            <th style={{ padding: "10px", textAlign: "left", color: "white" }}>Acciones</th>
+            {(puedeEditar || puedeEliminar) && <th style={{ padding: "10px", textAlign: "left", color: "white" }}>Acciones</th>}
           </tr>
         </thead>
         <tbody>
@@ -128,52 +140,58 @@ export default function Clientes() {
               <tr key={cliente.id_cliente} style={{ borderBottom: "1px solid #ddd" }}>
                 <td style={{ padding: "10px" }}>{cliente.id_cliente}</td>
                 <td style={{ padding: "10px" }}>{cliente.nombre}</td>
-                <td style={{ padding: "10px" }}>{cliente.telefono || "-"}</td>
-                <td style={{ padding: "10px" }}>{cliente.correo || "-"}</td>
+                {verTelefono && <td style={{ padding: "10px" }}>{cliente.telefono || "-"}</td>}
+                {verCorreo && <td style={{ padding: "10px" }}>{cliente.correo || "-"}</td>}
                 <td style={{ padding: "10px" }}>
                   <span style={{ color: cliente.activo ? "green" : "red" }}>
                     {cliente.activo ? "✓" : "✗"}
                   </span>
                 </td>
-                <td style={{ padding: "10px", display: "flex", gap: "5px" }}>
-                  <button
-                    onClick={() => handleEditar(cliente)}
-                    style={{
-                      backgroundColor: "#1A2A5E",
-                      color: "white",
-                      border: "none",
-                      padding: "5px 10px",
-                      borderRadius: "4px",
-                      cursor: "pointer",
-                    }}
-                  >
-                    Editar
-                  </button>
-                  <button
-                    onClick={() => handleToggleActivo(cliente)}
-                    style={{
-                      backgroundColor: cliente.activo ? "#D0192B" : "#10b981",
-                      color: "white",
-                      border: "none",
-                      padding: "5px 10px",
-                      borderRadius: "4px",
-                      cursor: "pointer",
-                    }}
-                  >
-                    {cliente.activo ? "Desactivar" : "Activar"}
-                  </button>
-                </td>
+                {(puedeEditar || puedeEliminar) && (
+                  <td style={{ padding: "10px", display: "flex", gap: "5px" }}>
+                    {puedeEditar && (
+                      <button
+                        onClick={() => handleEditar(cliente)}
+                        style={{
+                          backgroundColor: "#1A2A5E",
+                          color: "white",
+                          border: "none",
+                          padding: "5px 10px",
+                          borderRadius: "4px",
+                          cursor: "pointer",
+                        }}
+                      >
+                        Editar
+                      </button>
+                    )}
+                    {puedeEliminar && (
+                      <button
+                        onClick={() => handleToggleActivo(cliente)}
+                        style={{
+                          backgroundColor: cliente.activo ? "#D0192B" : "#10b981",
+                          color: "white",
+                          border: "none",
+                          padding: "5px 10px",
+                          borderRadius: "4px",
+                          cursor: "pointer",
+                        }}
+                      >
+                        {cliente.activo ? "Desactivar" : "Activar"}
+                      </button>
+                    )}
+                  </td>
+                )}
               </tr>
             ))
-          ) : (
-            <tr>
-              <td colSpan="6" style={{ padding: "10px", textAlign: "center" }}>
-                No hay clientes registrados
-              </td>
-            </tr>
-          )}
+          ) : null}
         </tbody>
       </table>
+
+      {clientes.length === 0 && (
+        <div style={{ padding: "20px", textAlign: "center", color: "#666" }}>
+          No se encontraron registros
+        </div>
+      )}
 
       {(editando || creando) && (
         <div
@@ -208,7 +226,7 @@ export default function Clientes() {
               <input
                 type="text"
                 value={formData.nombre}
-                onChange={(e) => setFormData({ ...formData, nombre: e.target.value })}
+                onChange={(evento) => setFormData({ ...formData, nombre: evento.target.value })}
                 style={{
                   width: "100%",
                   padding: "8px",
@@ -218,46 +236,50 @@ export default function Clientes() {
                 }}
               />
             </div>
-            <div style={{ marginBottom: "15px" }}>
-              <label style={{ display: "block", marginBottom: "5px", fontWeight: "bold" }}>
-                Teléfono
-              </label>
-              <input
-                type="text"
-                value={formData.telefono}
-                onChange={(e) => setFormData({ ...formData, telefono: e.target.value })}
-                style={{
-                  width: "100%",
-                  padding: "8px",
-                  border: "1px solid #ddd",
-                  borderRadius: "4px",
-                  boxSizing: "border-box",
-                }}
-              />
-            </div>
-            <div style={{ marginBottom: "15px" }}>
-              <label style={{ display: "block", marginBottom: "5px", fontWeight: "bold" }}>
-                Correo
-              </label>
-              <input
-                type="email"
-                value={formData.correo}
-                onChange={(e) => setFormData({ ...formData, correo: e.target.value })}
-                style={{
-                  width: "100%",
-                  padding: "8px",
-                  border: "1px solid #ddd",
-                  borderRadius: "4px",
-                  boxSizing: "border-box",
-                }}
-              />
-            </div>
+            {verTelefono && (
+              <div style={{ marginBottom: "15px" }}>
+                <label style={{ display: "block", marginBottom: "5px", fontWeight: "bold" }}>
+                  Teléfono
+                </label>
+                <input
+                  type="text"
+                  value={formData.telefono}
+                  onChange={(evento) => setFormData({ ...formData, telefono: evento.target.value })}
+                  style={{
+                    width: "100%",
+                    padding: "8px",
+                    border: "1px solid #ddd",
+                    borderRadius: "4px",
+                    boxSizing: "border-box",
+                  }}
+                />
+              </div>
+            )}
+            {verCorreo && (
+              <div style={{ marginBottom: "15px" }}>
+                <label style={{ display: "block", marginBottom: "5px", fontWeight: "bold" }}>
+                  Correo
+                </label>
+                <input
+                  type="email"
+                  value={formData.correo}
+                  onChange={(evento) => setFormData({ ...formData, correo: evento.target.value })}
+                  style={{
+                    width: "100%",
+                    padding: "8px",
+                    border: "1px solid #ddd",
+                    borderRadius: "4px",
+                    boxSizing: "border-box",
+                  }}
+                />
+              </div>
+            )}
             <div style={{ marginBottom: "20px" }}>
               <label style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                 <input
                   type="checkbox"
                   checked={formData.activo}
-                  onChange={(e) => setFormData({ ...formData, activo: e.target.checked })}
+                  onChange={(evento) => setFormData({ ...formData, activo: evento.target.checked })}
                 />
                 <span>Activo</span>
               </label>

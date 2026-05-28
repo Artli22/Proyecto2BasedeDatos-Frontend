@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react"
 import { empleadosServicio } from "../../servicios/empleadosServicio"
+import { loginServicio } from "../../servicios/loginServicio"
+import { puedeHacer } from "../../config/accionesPermiso"
 
 export default function Empleados() {
   const [empleados, setEmpleados] = useState([])
@@ -8,6 +10,12 @@ export default function Empleados() {
   const [editando, setEditando] = useState(null)
   const [creando, setCreando] = useState(false)
   const [formData, setFormData] = useState({ nombre: "", telefono: "", correo: "", activo: true })
+
+  // Permisos del usuario actual
+  const rol = loginServicio.obtenerRol()
+  const puedeCrear = puedeHacer("empleado", rol, "crear")
+  const puedeEditar = puedeHacer("empleado", rol, "editar")
+  const puedeEliminar = puedeHacer("empleado", rol, "eliminar")
 
   useEffect(() => {
     cargarEmpleados()
@@ -96,21 +104,23 @@ export default function Empleados() {
   return (
     <div style={{ padding: "20px" }}>
       <h1>Empleados</h1>
-      <button
-        onClick={handleCrear}
-        style={{
-          backgroundColor: "#D0192B",
-          color: "white",
-          border: "none",
-          padding: "10px 20px",
-          borderRadius: "4px",
-          cursor: "pointer",
-          marginBottom: "20px",
-          fontWeight: "bold",
-        }}
-      >
-        + Crear Nuevo Empleado
-      </button>
+      {puedeCrear && (
+        <button
+          onClick={handleCrear}
+          style={{
+            backgroundColor: "#D0192B",
+            color: "white",
+            border: "none",
+            padding: "10px 20px",
+            borderRadius: "4px",
+            cursor: "pointer",
+            marginBottom: "20px",
+            fontWeight: "bold",
+          }}
+        >
+          + Crear Nuevo Empleado
+        </button>
+      )}
       <table style={{ width: "100%", borderCollapse: "collapse" }}>
         <thead>
           <tr style={{ borderBottom: "2px solid #D0192B", backgroundColor: "#1A2A5E", color: "white" }}>
@@ -119,7 +129,7 @@ export default function Empleados() {
             <th style={{ padding: "10px", textAlign: "left", color: "white" }}>Teléfono</th>
             <th style={{ padding: "10px", textAlign: "left", color: "white" }}>Correo</th>
             <th style={{ padding: "10px", textAlign: "left", color: "white" }}>Activo</th>
-            <th style={{ padding: "10px", textAlign: "left", color: "white" }}>Acciones</th>
+            {(puedeEditar || puedeEliminar) && <th style={{ padding: "10px", textAlign: "left", color: "white" }}>Acciones</th>}
           </tr>
         </thead>
         <tbody>
@@ -135,45 +145,51 @@ export default function Empleados() {
                     {empleado.activo ? "✓" : "✗"}
                   </span>
                 </td>
-                <td style={{ padding: "10px", display: "flex", gap: "5px" }}>
-                  <button
-                    onClick={() => handleEditar(empleado)}
-                    style={{
-                      backgroundColor: "#1A2A5E",
-                      color: "white",
-                      border: "none",
-                      padding: "5px 10px",
-                      borderRadius: "4px",
-                      cursor: "pointer",
-                    }}
-                  >
-                    Editar
-                  </button>
-                  <button
-                    onClick={() => handleToggleActivo(empleado)}
-                    style={{
-                      backgroundColor: empleado.activo ? "#D0192B" : "#10b981",
-                      color: "white",
-                      border: "none",
-                      padding: "5px 10px",
-                      borderRadius: "4px",
-                      cursor: "pointer",
-                    }}
-                  >
-                    {empleado.activo ? "Desactivar" : "Activar"}
-                  </button>
-                </td>
+                {(puedeEditar || puedeEliminar) && (
+                  <td style={{ padding: "10px", display: "flex", gap: "5px" }}>
+                    {puedeEditar && (
+                      <button
+                        onClick={() => handleEditar(empleado)}
+                        style={{
+                          backgroundColor: "#1A2A5E",
+                          color: "white",
+                          border: "none",
+                          padding: "5px 10px",
+                          borderRadius: "4px",
+                          cursor: "pointer",
+                        }}
+                      >
+                        Editar
+                      </button>
+                    )}
+                    {puedeEliminar && (
+                      <button
+                        onClick={() => handleToggleActivo(empleado)}
+                        style={{
+                          backgroundColor: empleado.activo ? "#D0192B" : "#10b981",
+                          color: "white",
+                          border: "none",
+                          padding: "5px 10px",
+                          borderRadius: "4px",
+                          cursor: "pointer",
+                        }}
+                      >
+                        {empleado.activo ? "Desactivar" : "Activar"}
+                      </button>
+                    )}
+                  </td>
+                )}
               </tr>
             ))
-          ) : (
-            <tr>
-              <td colSpan="6" style={{ padding: "10px", textAlign: "center" }}>
-                No hay empleados registrados
-              </td>
-            </tr>
-          )}
+          ) : null}
         </tbody>
       </table>
+
+      {empleados.length === 0 && (
+        <div style={{ padding: "20px", textAlign: "center", color: "#666" }}>
+          No se encontraron registros
+        </div>
+      )}
 
       {(editando || creando) && (
         <div
@@ -208,7 +224,7 @@ export default function Empleados() {
               <input
                 type="text"
                 value={formData.nombre}
-                onChange={(e) => setFormData({ ...formData, nombre: e.target.value })}
+                onChange={(evento) => setFormData({ ...formData, nombre: evento.target.value })}
                 style={{
                   width: "100%",
                   padding: "8px",
@@ -257,7 +273,7 @@ export default function Empleados() {
                 <input
                   type="checkbox"
                   checked={formData.activo}
-                  onChange={(e) => setFormData({ ...formData, activo: e.target.checked })}
+                  onChange={(evento) => setFormData({ ...formData, activo: evento.target.checked })}
                 />
                 <span>Activo</span>
               </label>

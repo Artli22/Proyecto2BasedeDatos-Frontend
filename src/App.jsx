@@ -83,9 +83,9 @@ const router = createBrowserRouter([
       },
 
       // ========== REPORTES ==========
-      // Auditoría: Admin, Auditor
+      // Auditoría: Admin, Gerente, Auditor
       {
-        element: <ProtectedRoute requiredRoles={["administrador", "auditor"]} />,
+        element: <ProtectedRoute requiredRoles={["administrador", "gerente", "auditor"]} />,
         children: [
           { path: "reportes/auditoria", element: <Auditoria /> },
         ]
@@ -99,17 +99,17 @@ const router = createBrowserRouter([
         ]
       },
 
-      // Desempeño: Admin, Auditor, RH
+      // Desempeño: Admin, Gerente, Auditor, RH
       {
-        element: <ProtectedRoute requiredRoles={["administrador", "auditor", "recursohumano"]} />,
+        element: <ProtectedRoute requiredRoles={["administrador", "gerente", "auditor", "recursohumano"]} />,
         children: [
           { path: "reportes/desempeno", element: <Desempeno /> },
         ]
       },
 
-      // Stock Crítico: Todos
+      // Stock Crítico: Admin, Gerente, Vendedor, Auditor (NO RH)
       {
-        element: <ProtectedRoute requiredRoles={["administrador", "auditor", "gerente", "vendedor", "recursohumano"]} />,
+        element: <ProtectedRoute requiredRoles={["administrador", "gerente", "vendedor", "auditor"]} />,
         children: [
           { path: "reportes/stock", element: <StockCritico /> },
         ]
