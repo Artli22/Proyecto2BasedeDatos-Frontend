@@ -48,4 +48,48 @@ export const reportesServicio = {
       throw error
     }
   },
+
+  // Resumen de Compras 
+  obtenerResumenCompras: async (idCliente = null) => {
+    try {
+      let url = `${URL_BASE}/reportes/resumen-compras`
+      if (idCliente) {
+        url += `?id_cliente=${idCliente}`
+      }
+      const respuesta = await fetch(url)
+      if (!respuesta.ok) throw new Error("Error al obtener resumen de compras")
+      return await respuesta.json()
+    } catch (error) {
+      console.error(error)
+      throw error
+    }
+  },
+
+  // Inventario Crítico 
+  obtenerInventarioCritico: async (limiteStock = null) => {
+    try {
+      let url = `${URL_BASE}/reportes/inventario-critico`
+      if (limiteStock) {
+        url += `?limite_stock=${limiteStock}`
+      }
+      const respuesta = await fetch(url)
+      if (!respuesta.ok) throw new Error("Error al obtener inventario crítico")
+      return await respuesta.json()
+    } catch (error) {
+      console.error(error)
+      throw error
+    }
+  },
+
+  // Historial de Cliente 
+  obtenerClienteConHistorial: async (idCliente) => {
+    try {
+      const respuesta = await fetch(`${URL_BASE}/clientes/historial?id=${idCliente}`)
+      if (!respuesta.ok) throw new Error("Error al obtener historial del cliente")
+      return await respuesta.json()
+    } catch (error) {
+      console.error(error)
+      throw error
+    }
+  }
 }

@@ -3,6 +3,7 @@ import { useEffect, useState } from "react"
 import { clientesServicio } from "../../servicios/clientesServicio"
 import { loginServicio } from "../../servicios/loginServicio"
 import { puedeHacer, columnaVisible } from "../../config/accionesPermiso"
+import ClienteHistorial from "./ClienteHistorial"
 
 export default function Clientes() {
   const [clientes, setClientes] = useState([])
@@ -11,6 +12,8 @@ export default function Clientes() {
   const [editando, setEditando] = useState(null)
   const [creando, setCreando] = useState(false)
   const [formData, setFormData] = useState({ nombre: "", telefono: "", correo: "", activo: true })
+  const [historialClienteId, setHistorialClienteId] = useState(null)
+  const [historialNombre, setHistorialNombre] = useState(null)
 
   const rol = loginServicio.obtenerRol()
   const puedeCrear = puedeHacer("cliente", rol, "crear")
@@ -148,7 +151,7 @@ export default function Clientes() {
                   </span>
                 </td>
                 {(puedeEditar || puedeEliminar) && (
-                  <td style={{ padding: "10px", display: "flex", gap: "5px" }}>
+                  <td style={{ padding: "10px", display: "flex", gap: "5px", flexWrap: "wrap" }}>
                     {puedeEditar && (
                       <button
                         onClick={() => handleEditar(cliente)}
@@ -159,11 +162,26 @@ export default function Clientes() {
                           padding: "5px 10px",
                           borderRadius: "4px",
                           cursor: "pointer",
+                          fontSize: "12px",
                         }}
                       >
                         Editar
                       </button>
                     )}
+                    <button
+                      onClick={() => setHistorialClienteId(cliente.id_cliente) || setHistorialNombre(cliente.nombre)}
+                      style={{
+                        backgroundColor: "#10b981",
+                        color: "white",
+                        border: "none",
+                        padding: "5px 10px",
+                        borderRadius: "4px",
+                        cursor: "pointer",
+                        fontSize: "12px",
+                      }}
+                    >
+                      Historial
+                    </button>
                     {puedeEliminar && (
                       <button
                         onClick={() => handleToggleActivo(cliente)}
@@ -174,6 +192,7 @@ export default function Clientes() {
                           padding: "5px 10px",
                           borderRadius: "4px",
                           cursor: "pointer",
+                          fontSize: "12px",
                         }}
                       >
                         {cliente.activo ? "Desactivar" : "Activar"}
@@ -191,6 +210,17 @@ export default function Clientes() {
         <div style={{ padding: "20px", textAlign: "center", color: "#666" }}>
           No se encontraron registros
         </div>
+      )}
+
+      {historialClienteId && (
+        <ClienteHistorial 
+          clienteId={historialClienteId}
+          nombreCliente={historialNombre}
+          onCerrar={() => {
+            setHistorialClienteId(null)
+            setHistorialNombre(null)
+          }}
+        />
       )}
 
       {(editando || creando) && (
